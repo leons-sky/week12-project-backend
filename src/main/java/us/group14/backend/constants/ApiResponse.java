@@ -5,6 +5,9 @@ import org.springframework.http.ResponseEntity;
 
 public enum ApiResponse {
     OK(HttpStatus.OK, null),
+    EXCEEDS_BALANCE(HttpStatus.BAD_REQUEST, "Amount exceeds balance"),
+    INVALID_AMOUNT(HttpStatus.BAD_REQUEST, "Amount is not valid"),
+    INVALID_LIMIT(HttpStatus.BAD_REQUEST, "Invalid limit, must be [0, 100]"),
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, "Email is not a valid email"),
     ALREADY_CONFIRMED_EMAIL(HttpStatus.IM_USED, "Email already confirmed"),
     CONFIRMATION_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "Confirmation token not found"),

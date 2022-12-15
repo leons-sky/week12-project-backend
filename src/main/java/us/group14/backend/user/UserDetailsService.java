@@ -17,4 +17,8 @@ public class UserDetailsService implements org.springframework.security.core.use
                 () -> new UsernameNotFoundException(String.format("User with username '%s' not found", username))
         );
     }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
 }
