@@ -2,6 +2,7 @@ package us.group14.backend.transaction;
 
 import jakarta.persistence.*;
 import jakarta.persistence.spi.PersistenceUnitTransactionType;
+import lombok.NoArgsConstructor;
 import org.bouncycastle.cms.Recipient;
 import us.group14.backend.account.Account;
 import us.group14.backend.user.User;
@@ -9,6 +10,7 @@ import us.group14.backend.user.User;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
 public class Transaction {
 
     @Id
@@ -22,6 +24,31 @@ public class Transaction {
             generator = "transaction_sequence"
     )
     private Long id;
+    private Double amount;
+    private LocalDateTime transferredAt;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "recipient")
+    private Account recipient;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "sender")
+    private Account sender;
+    private TransactionType type;
+    private String message;
+
+    public Transaction(Double amount, Account sender, TransactionType type) {
+        this.amount = amount;
+        this.sender = sender;
+        this.type = type;
+    }
+
+    public Transaction(Double amount, Account sender, Account recipient, TransactionType type, String message) {
+        this.amount = amount;
+        this.sender = sender;
+        this.recipient = recipient;
+        this.type = type;
+        this.message = message;
+    }
+
     public Long getId() {
         return id;
     }
@@ -29,8 +56,6 @@ public class Transaction {
     public void setId(Long id) {
         this.id = id;
     }
-
-    private Double amount;
 
     public Double getAmount() {
         return amount;
@@ -40,8 +65,6 @@ public class Transaction {
         this.amount = amount;
     }
 
-    private LocalDateTime transferredAt;
-
     public LocalDateTime getTransferredAt() {
         return transferredAt;
     }
@@ -50,10 +73,6 @@ public class Transaction {
         this.transferredAt = transferredAt;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "recipient")
-    private Account recipient;
-
     public Account getRecipient() {
         return recipient;
     }
@@ -61,10 +80,6 @@ public class Transaction {
     public void setRecipient(Account recipient) {
         this.recipient = recipient;
     }
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "sender")
-    private Account sender;
 
     public Account getSender() {
         return sender;
@@ -82,8 +97,6 @@ public class Transaction {
         this.type = type;
     }
 
-    private TransactionType type;
-
     public String getMessage() {
         return message;
     }
@@ -91,6 +104,4 @@ public class Transaction {
     public void setMessage(String message) {
         this.message = message;
     }
-
-    private String message;
 }

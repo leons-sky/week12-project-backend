@@ -17,7 +17,6 @@ import us.group14.backend.user.UserDetailsService;
 public class AccountService {
 
     private final UserDetailsService userDetailsService;
-    private final TransactionRepository transactionRepository;
 
     public ResponseEntity<Account> getAccount(User user) {
         return ResponseEntity.ok(user.getAccount());
@@ -76,7 +75,7 @@ public class AccountService {
         }
 
         Account recipientAccount = recipient.getAccount();
-        Transaction transaction = new Transaction(amount, senderAccount, recipientAccount, TransactionType.TRANSFER);
+        Transaction transaction = new Transaction(amount, senderAccount, recipientAccount, TransactionType.TRANSFER, request.getMessage());
         senderAccount.complete(transaction);
         recipientAccount.complete(transaction);
 
