@@ -24,7 +24,9 @@ public class Transaction {
             generator = "transaction_sequence"
     )
     private Long id;
+    @Column(nullable = false)
     private Double amount;
+    @Column(nullable = false)
     private LocalDateTime transferredAt;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "recipient")
@@ -32,6 +34,8 @@ public class Transaction {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "sender")
     private Account sender;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransactionType type;
     private String message;
 
@@ -39,6 +43,7 @@ public class Transaction {
         this.amount = amount;
         this.sender = sender;
         this.type = type;
+        this.transferredAt = LocalDateTime.now();
     }
 
     public Transaction(Double amount, Account sender, Account recipient, TransactionType type, String message) {
@@ -47,6 +52,7 @@ public class Transaction {
         this.recipient = recipient;
         this.type = type;
         this.message = message;
+        this.transferredAt = LocalDateTime.now();
     }
 
     public Long getId() {

@@ -20,6 +20,14 @@ public class Account {
             generator = "account_sequence"
     )
     private Long id;
+    @Column(nullable = false)
+    private Double balance;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "user_id")
+    private User user;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "Transaction")
+    private Set<Transaction> transactions;
 
     public Long getId() {
         return id;
@@ -29,8 +37,6 @@ public class Account {
         this.id = id;
     }
 
-    private Double balance;
-
     public Double getBalance() {
         return balance;
     }
@@ -39,10 +45,6 @@ public class Account {
         this.balance = balance;
     }
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
-    private User user;
-
     public User getUser() {
         return user;
     }
@@ -50,10 +52,6 @@ public class Account {
     public void setUser(User user) {
         this.user = user;
     }
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "Transaction")
-    private Set<Transaction> transactions;
 
     public Set<Transaction> getTransactions() {
         return transactions;
@@ -74,13 +72,17 @@ public class Account {
     public void complete(Transaction transaction) {
         switch (transaction.getType()) {
             case DEPOSIT -> {
-                break;
+                this.deposit(transaction.getAmount());
             }
             case WITHDRAW -> {
-                break;
+                this.withdraw(transaction.getAmount());
             }
             case TRANSFER -> {
-                break;
+                if (transaction.getSender().equals(this)) {
+                    this.withdraw(transaction.getAmount());
+                } else if (transaction.getRecipient().equals(this)) {
+                    this.deposit(transaction.getAmount());
+                }
             }
         }
     }
