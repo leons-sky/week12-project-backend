@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import us.group14.backend.constants.ApiResponse;
+import us.group14.backend.transaction.Transaction;
 import us.group14.backend.transaction.TransactionRepository;
 import us.group14.backend.transaction.TransactionRequest;
+import us.group14.backend.transaction.TransactionType;
 import us.group14.backend.user.User;
 import us.group14.backend.user.UserDetailsService;
 

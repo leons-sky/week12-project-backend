@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @DeleteMapping("/contacts/{id}")
-    public String deleteContact(AuthUser user, @PathVariable("id") Long id) {
+    public void deleteContact(AuthUser user, @PathVariable("id") Long id) {
         userService.deleteContact(user.get(), id);
 //        AuthUser deleteContact = authUserRepository.findById(id).get();
 //        authUserRepository.delete(deleteContact);

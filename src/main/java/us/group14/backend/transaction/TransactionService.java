@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import us.group14.backend.account.Account;
 import us.group14.backend.constants.ApiResponse;
 import us.group14.backend.user.User;
 

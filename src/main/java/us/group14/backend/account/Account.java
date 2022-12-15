@@ -63,11 +63,25 @@ public class Account {
         transactions = transactions;
     }
 
-   public void withdraw (double amount) {
+    public void withdraw(double amount) {
         this.balance = this.balance - amount;
    }
 
-    public void deposit (double amount) {
+    public void deposit(double amount) {
         this.balance = this.balance + amount;
+    }
+
+    public void complete(Transaction transaction) {
+        switch (transaction.getType()) {
+            case DEPOSIT -> {
+                break;
+            }
+            case WITHDRAW -> {
+                break;
+            }
+            case TRANSFER -> {
+                break;
+            }
+        }
     }
 }

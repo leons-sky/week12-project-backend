@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.group14.backend.annotations.ApiMapping;
 import us.group14.backend.constants.ApiResponse;
+import us.group14.backend.transaction.Transaction;
 import us.group14.backend.transaction.TransactionRequest;
 import us.group14.backend.transaction.TransactionService;
 import us.group14.backend.user.AuthUser;

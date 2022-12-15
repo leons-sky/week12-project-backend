@@ -10,6 +10,7 @@ import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import us.group14.backend.account.Account;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -67,6 +68,10 @@ public class User implements UserDetails {
             inverseJoinColumns=@JoinColumn(name="userId")
     )
     private Set<User> contactsOf;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "account_id")
+    private Account account;
 
     public User(String username, String email, String password, UserRole userRole) {
         this.username = username;
