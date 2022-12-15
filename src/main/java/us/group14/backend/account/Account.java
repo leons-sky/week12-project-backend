@@ -8,6 +8,17 @@ import java.util.Set;
 
 @Entity
 public class Account {
+
+    @Id
+    @SequenceGenerator(
+            name = "account_sequence",
+            sequenceName = "account_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "account_sequence"
+    )
     private Long id;
 
     public Long getId() {

@@ -11,6 +11,16 @@ import java.time.LocalDateTime;
 @Entity
 public class Transaction {
 
+    @Id
+    @SequenceGenerator(
+            name = "transaction_sequence",
+            sequenceName = "transaction_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "transaction_sequence"
+    )
     private Long id;
     public Long getId() {
         return id;
