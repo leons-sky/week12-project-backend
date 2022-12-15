@@ -2,6 +2,7 @@ package us.group14.backend.user;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
@@ -16,6 +17,7 @@ import us.group14.backend.security.AuthenticationRequest;
 import us.group14.backend.security.config.JwtUtil;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -86,5 +88,23 @@ public class UserService {
         response.addCookie(cookie);
 
         return ApiResponse.OK.toResponse();
+    }
+
+    @Transactional
+    public void addContact(User user, Long id) {
+        User contact = userRepository.findById(id).orElse(null);
+        user.addContact(contact);
+    }
+
+    public Set<User> getContacts(User user) {
+        return user.getContacts();
+    }
+
+    @Transactional
+    public void deleteContact(User user, Long id) {
+        User contact = userRepository.findById(id).orElse(null);
+        user.deleteContact(contact);
+
+
     }
 }
