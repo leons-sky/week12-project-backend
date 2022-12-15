@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@AllArgsConstructor
 public class AuthenticationRequest {
 
     private final String username;
