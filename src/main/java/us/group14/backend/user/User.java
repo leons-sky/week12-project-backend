@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -53,6 +54,19 @@ public class User implements UserDetails {
 
     private Boolean locked = false;
     private Boolean enabled = false;
+
+    @ManyToMany
+    @JoinTable(name="contacts",
+            joinColumns=@JoinColumn(name="userId"),
+            inverseJoinColumns=@JoinColumn(name="contactId")
+    )
+    private Set<User> contacts;
+    @ManyToMany
+    @JoinTable(name="contacts",
+            joinColumns=@JoinColumn(name="contactId"),
+            inverseJoinColumns=@JoinColumn(name="userId")
+    )
+    private Set<User> contactsOf;
 
     public User(String username, String email, String password, UserRole userRole) {
         this.username = username;
@@ -108,5 +122,15 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+
+    public void addContact(User contact) {
+        this.contacts.add(contact);
+
+    }
+
+    public void deleteContact(User contact) {
+        this.contacts.remove(contact);
     }
 }
