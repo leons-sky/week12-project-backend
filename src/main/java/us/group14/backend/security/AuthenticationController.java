@@ -1,7 +1,5 @@
 package us.group14.backend.security;
 
-import com.leonsemmens.securitycourse.annotations.ApiMapping;
-import com.leonsemmens.securitycourse.user.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import us.group14.backend.annotations.ApiMapping;
+import us.group14.backend.user.UserService;
 
-import static com.leonsemmens.securitycourse.security.config.AuthFilter.getAuthCookie;
+import static us.group14.backend.security.config.AuthFilter.getAuthCookie;
 
 @RestController
 @ApiMapping("/auth")

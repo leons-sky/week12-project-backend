@@ -1,11 +1,11 @@
 package us.group14.backend.annotations.config;
 
-import com.leonsemmens.securitycourse.annotations.ApiMapping;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import us.group14.backend.annotations.ApiMapping;
 
 import java.lang.reflect.Method;
 

@@ -1,15 +1,15 @@
 package us.group14.backend.registration;
 
-import com.leonsemmens.securitycourse.constants.ApiResponse;
-import com.leonsemmens.securitycourse.registration.token.ConfirmationToken;
-import com.leonsemmens.securitycourse.registration.token.ConfirmationTokenService;
-import com.leonsemmens.securitycourse.user.User;
-import com.leonsemmens.securitycourse.user.UserRole;
-import com.leonsemmens.securitycourse.user.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import us.group14.backend.constants.ApiResponse;
+import us.group14.backend.registration.token.ConfirmationToken;
+import us.group14.backend.registration.token.ConfirmationTokenService;
+import us.group14.backend.user.User;
+import us.group14.backend.user.UserRole;
+import us.group14.backend.user.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

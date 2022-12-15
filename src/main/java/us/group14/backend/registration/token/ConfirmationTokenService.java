@@ -1,8 +1,8 @@
 package us.group14.backend.registration.token;
 
-import com.leonsemmens.securitycourse.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import us.group14.backend.user.User;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

@@ -1,11 +1,5 @@
 package us.group14.backend.user;
 
-import com.leonsemmens.securitycourse.constants.ApiCookie;
-import com.leonsemmens.securitycourse.constants.ApiResponse;
-import com.leonsemmens.securitycourse.registration.token.ConfirmationToken;
-import com.leonsemmens.securitycourse.registration.token.ConfirmationTokenService;
-import com.leonsemmens.securitycourse.security.AuthenticationRequest;
-import com.leonsemmens.securitycourse.security.config.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -14,6 +8,12 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
+import us.group14.backend.constants.ApiCookie;
+import us.group14.backend.constants.ApiResponse;
+import us.group14.backend.registration.token.ConfirmationToken;
+import us.group14.backend.registration.token.ConfirmationTokenService;
+import us.group14.backend.security.AuthenticationRequest;
+import us.group14.backend.security.config.JwtUtil;
 
 import java.util.List;
 

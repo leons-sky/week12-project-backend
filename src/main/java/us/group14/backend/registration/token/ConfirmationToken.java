@@ -1,11 +1,11 @@
 package us.group14.backend.registration.token;
 
-import com.leonsemmens.securitycourse.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import us.group14.backend.user.User;
 
 import java.time.LocalDateTime;
 
