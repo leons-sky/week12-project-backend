@@ -1,3 +1,5 @@
+![](./assets/SendOLogo.svg)
+
 Project Brief:
 
 Sendo is an online banking interface that allows users to manage their funds.
