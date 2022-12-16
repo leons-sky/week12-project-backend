@@ -1,13 +1,17 @@
 package us.group14.backend.account;
 
 import jakarta.persistence.*;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.Hibernate;
 import us.group14.backend.transaction.Transaction;
 import us.group14.backend.user.User;
 
+import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "accounts")
 public class Account {
@@ -23,34 +27,14 @@ public class Account {
             generator = "account_sequence"
     )
     private Long id;
+
     @Column(nullable = false)
     private Double balance;
+
+    //mappedBy = "account",
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Transaction")
-    private Set<Transaction> transactions;
-
-    public Account() {
-        this.balance = 0d;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
 
     public User getUser() {
         return user;
@@ -60,13 +44,44 @@ public class Account {
         this.user = user;
     }
 
-    public Set<Transaction> getTransactions() {
-        return this.transactions;
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<Transaction> transactions;
+
+    public Account() {
+        this.balance = 0d;
     }
 
-    public void addTransaction(Transaction transaction) {
-        this.transactions.add(transaction);
-    }
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(long id) {
+//        this.id = id;
+//    }
+//
+//    public Double getBalance() {
+//        return balance;
+//    }
+//
+//    public void setBalance(Double balance) {
+//        this.balance = balance;
+//    }
+//
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
+//
+//    public Set<Transaction> getTransactions() {
+//        return this.transactions;
+//    }
+
+//    public void addTransaction(Transaction transaction) {
+//        this.transactions.add(transaction);
+//    }
 
     public void withdraw(double amount) {
         this.balance = this.balance - amount;
@@ -78,33 +93,26 @@ public class Account {
         System.out.println("DEPOSIT " + this.balance);
     }
 
-    public void complete(Transaction transaction) {
-        switch (transaction.getType()) {
-            case DEPOSIT -> {
-                this.deposit(transaction.getAmount());
-            }
-            case WITHDRAW -> {
-                this.withdraw(transaction.getAmount());
-            }
-            case TRANSFER -> {
-                if (transaction.getSender().equals(this)) {
-                    this.withdraw(transaction.getAmount());
-                } else if (transaction.getRecipient().equals(this)) {
-                    this.deposit(transaction.getAmount());
-                }
-            }
-        }
-
-        this.addTransaction(transaction);
-    }
-
     @Override
     public String toString() {
         return "Account{" +
                 "id=" + id +
                 ", balance=" + balance +
                 ", user=" + user.getId() +
-                ", transactions=" + transactions +
+//                ", transactions=" + transactions +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Account account = (Account) o;
+        return id != null && Objects.equals(id, account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

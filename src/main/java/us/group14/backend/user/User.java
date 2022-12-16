@@ -56,18 +56,18 @@ public class User implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = false;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="contacts",
-            joinColumns=@JoinColumn(name="userId"),
-            inverseJoinColumns=@JoinColumn(name="contactId")
-    )
-    private Set<User> contacts;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="contacts",
-            joinColumns=@JoinColumn(name="contactId"),
-            inverseJoinColumns=@JoinColumn(name="userId")
-    )
-    private Set<User> contactsOf;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name="contacts",
+//            joinColumns=@JoinColumn(name="userId"),
+//            inverseJoinColumns=@JoinColumn(name="contactId")
+//    )
+//    private Set<User> contacts;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name="contacts",
+//            joinColumns=@JoinColumn(name="contactId"),
+//            inverseJoinColumns=@JoinColumn(name="userId")
+//    )
+//    private Set<User> contactsOf;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
@@ -130,12 +130,12 @@ public class User implements UserDetails {
     }
 
 
-    public void addContact(User contact) {
-        this.contacts.add(contact);
-
-    }
-
-    public void deleteContact(User contact) {
-        this.contacts.remove(contact);
-    }
+//    public void addContact(User contact) {
+//        this.contacts.add(contact);
+//
+//    }
+//
+//    public void deleteContact(User contact) {
+//        this.contacts.remove(contact);
+//    }
 }

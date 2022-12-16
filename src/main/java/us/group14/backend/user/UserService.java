@@ -48,14 +48,13 @@ public class UserService {
         String encodedPassword = argon2PasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
-        Account account = new Account();
-        accountRepository.save(account);
-        userRepository.save(user);
+        Account account = accountRepository.save(new Account());
+        User savedUser = userRepository.save(user);
 
-        user.setAccount(account);
-        account.setUser(user);
+        savedUser.setAccount(account);
+        account.setUser(savedUser);
 
-        userRepository.save(user);
+        userRepository.save(savedUser);
         accountRepository.save(account);
 
         ConfirmationToken token = confirmationTokenService.createConfirmationToken(user);
@@ -102,32 +101,32 @@ public class UserService {
         return ApiResponse.OK.toResponse();
     }
 
-    @Transactional
-    public void addContact(User user, String username) {
-        Hibernate.initialize(user);
+//    @Transactional
+//    public void addContact(User user, String username) {
+//        //Hibernate.initialize(user);
+//
+//        User contact = userDetailsService.loadUserByUsername(username);
+//        //Hibernate.initialize(contact);
+//
+//        System.out.println(contact);
+//        user.addContact(contact);
+//    }
 
-        User contact = userDetailsService.loadUserByUsername(username);
-        Hibernate.initialize(contact);
-
-        System.out.println(contact);
-        user.addContact(contact);
-    }
-
-    @Transactional
-    public Set<User> getContacts(User user) {
-        Hibernate.initialize(user);
-        return user.getContacts();
-    }
-
-    @Transactional
-    public void deleteContact(User user, Long id) {
-        Hibernate.initialize(user);
-
-        User contact = userRepository.findById(id).orElse(null);
-        Hibernate.initialize(contact);
-
-        user.deleteContact(contact);
-
-
-    }
+//    @Transactional
+//    public Set<User> getContacts(User user) {
+//        //Hibernate.initialize(user);
+//        return user.getContacts();
+//    }
+//
+//    @Transactional
+//    public void deleteContact(User user, Long id) {
+//        //Hibernate.initialize(user);
+//
+//        User contact = userRepository.findById(id).orElse(null);
+//        //Hibernate.initialize(contact);
+//
+//        user.deleteContact(contact);
+//
+//
+//    }
 }

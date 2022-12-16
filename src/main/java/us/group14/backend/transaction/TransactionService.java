@@ -28,7 +28,8 @@ public class TransactionService {
         }
 
         Account account = user.getAccount();
-        List<Transaction> transactions = account.getTransactions().stream().sorted(Comparator.comparing(Transaction::getTransferredAt).reversed()).limit(limit).toList();
+        List<Transaction> transactions = account.getTransactions()
+                .stream().sorted(Comparator.comparing(Transaction::getTransferredAt).reversed()).limit(limit).toList();
 //        Pageable recent = PageRequest.of(0, limit, Sort.Direction.DESC, "id");
 //        Page<Transaction> transactions = transactionRepository.findFromAccountWithPageable(account.getId(), recent);
         return ResponseEntity.ok(transactions);
@@ -36,7 +37,8 @@ public class TransactionService {
 
     public ResponseEntity<Transaction> getTransaction(User user, Long id) {
         Account account = user.getAccount();
-        Transaction transaction = account.getTransactions().stream().filter(t -> t.getId() == id).findFirst().orElse(null);
+        Transaction transaction = account.getTransactions()
+                .stream().filter(t -> t.getId() == id).findFirst().orElse(null);
 //        Transaction transaction = transactionRepository.findFromAccountWithId(account.getId(), id).orElse(null);
         return ResponseEntity.ok(transaction);
     }
