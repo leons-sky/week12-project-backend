@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import us.group14.backend.account.Account;
+import us.group14.backend.transaction.TransactionAndAccountView;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -35,19 +36,19 @@ public class User implements UserDetails {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    @JsonView(UserView.class)
+    @JsonView({UserView.class, TransactionAndAccountView.class})
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @JsonView(UserView.class)
+    @JsonView({UserView.class, TransactionAndAccountView.class})
     private String username;
 
     @Column(nullable = false)
-    @JsonView(UserView.class)
+    @JsonView({UserView.class, TransactionAndAccountView.class})
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @JsonView(UserView.class)
+    @JsonView({UserView.class, TransactionAndAccountView.class})
     private UserRole userRole;
 
     @Column(nullable = false)

@@ -1,15 +1,18 @@
 package us.group14.backend.account;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.group14.backend.annotations.ApiMapping;
 import us.group14.backend.constants.ApiResponse;
 import us.group14.backend.transaction.Transaction;
+import us.group14.backend.transaction.TransactionAndAccountView;
 import us.group14.backend.transaction.TransactionRequest;
 import us.group14.backend.transaction.TransactionService;
 import us.group14.backend.user.AuthUser;
 import us.group14.backend.user.User;
+import us.group14.backend.user.UserView;
 
 import java.util.List;
 
@@ -52,12 +55,14 @@ public class AccountController {
     }
 
     @GetMapping("/transactions")
-    public ResponseEntity<?> getTransactions(AuthUser authUser, @RequestParam("limit") Integer limit) {
+    @JsonView(TransactionAndAccountView.class)
+    public ResponseEntity<?> getTransactions(AuthUser authUser, @RequestParam(value = "limit", defaultValue = "100") Integer limit) {
         User user = authUser.get();
         return transactionService.getTransactions(user, limit);
     }
 
     @GetMapping("/transactions/{id}")
+    @JsonView(TransactionAndAccountView.class)
     public ResponseEntity<Transaction> getTransaction(AuthUser authUser, @PathVariable("id") Long id) {
         User user = authUser.get();
         return transactionService.getTransaction(user, id);

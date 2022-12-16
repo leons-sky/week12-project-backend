@@ -1,10 +1,12 @@
 package us.group14.backend.account;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 import us.group14.backend.transaction.Transaction;
+import us.group14.backend.transaction.TransactionAndAccountView;
 import us.group14.backend.user.User;
 
 import java.util.Objects;
@@ -26,14 +28,17 @@ public class Account {
             strategy = GenerationType.SEQUENCE,
             generator = "account_sequence"
     )
+    @JsonView(TransactionAndAccountView.class)
     private Long id;
 
     @Column(nullable = false)
+    @JsonView(TransactionAndAccountView.class)
     private Double balance;
 
     //mappedBy = "account",
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonView(TransactionAndAccountView.class)
     private User user;
 
     public User getUser() {
@@ -51,7 +56,7 @@ public class Account {
         this.balance = 0d;
     }
 
-//    public Long getId() {
+    //    public Long getId() {
 //        return id;
 //    }
 //
