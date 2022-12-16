@@ -56,13 +56,13 @@ public class User implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = false;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="contacts",
             joinColumns=@JoinColumn(name="userId"),
             inverseJoinColumns=@JoinColumn(name="contactId")
     )
     private Set<User> contacts;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="contacts",
             joinColumns=@JoinColumn(name="contactId"),
             inverseJoinColumns=@JoinColumn(name="userId")
@@ -70,7 +70,7 @@ public class User implements UserDetails {
     private Set<User> contactsOf;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "account_id")
+    @JoinColumn(name = "account_id")
     private Account account;
 
     public User(String username, String email, String password, UserRole userRole) {

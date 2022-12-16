@@ -3,14 +3,16 @@ package us.group14.backend.transaction;
 import jakarta.persistence.*;
 import jakarta.persistence.spi.PersistenceUnitTransactionType;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.bouncycastle.cms.Recipient;
 import us.group14.backend.account.Account;
 import us.group14.backend.user.User;
 
 import java.time.LocalDateTime;
 
-@Entity
 @NoArgsConstructor
+@Entity
+@Table(name = "transactions")
 public class Transaction {
 
     @Id
@@ -29,10 +31,10 @@ public class Transaction {
     @Column(nullable = false)
     private LocalDateTime transferredAt;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "recipient")
+    @JoinColumn(name = "recipient")
     private Account recipient;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "sender")
+    @JoinColumn(name = "sender")
     private Account sender;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -109,5 +111,18 @@ public class Transaction {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", transferredAt=" + transferredAt +
+                ", recipient=" + (recipient == null ? null : recipient.getId()) +
+                ", sender=" + (sender == null ? null : sender.getId()) +
+                ", type=" + type +
+                ", message='" + message + '\'' +
+                '}';
     }
 }

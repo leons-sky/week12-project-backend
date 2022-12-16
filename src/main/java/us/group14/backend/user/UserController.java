@@ -23,9 +23,11 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PostMapping("/contacts/{id}")
-    public void addContact(AuthUser user, @PathVariable("id") Long id) {
-        userService.addContact(user.get(), id);
+    @PostMapping("/contacts/{username}")
+    public void addContact(AuthUser user, @PathVariable("username") String username) {
+        User u = user.get();
+        System.out.println(u);
+        userService.addContact(u, username);
     }
 
     @GetMapping("/contacts")

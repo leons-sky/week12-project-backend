@@ -12,11 +12,15 @@ import us.group14.backend.transaction.TransactionType;
 import us.group14.backend.user.User;
 import us.group14.backend.user.UserDetailsService;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class AccountService {
 
     private final UserDetailsService userDetailsService;
+    private final TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
 
     public ResponseEntity<Account> getAccount(User user) {
         return ResponseEntity.ok(user.getAccount());
@@ -27,7 +31,7 @@ public class AccountService {
         return ResponseEntity.ok(account.getBalance());
     }
 
-    @Transactional
+//    @Transactional
     public ResponseEntity<String> withdraw(User user, TransactionRequest request) {
         Account account = user.getAccount();
         Double amount = request.getAmount();
@@ -39,12 +43,15 @@ public class AccountService {
         }
 
         Transaction transaction = new Transaction(amount, account, TransactionType.WITHDRAW);
+        transactionRepository.save(transaction);
+
         account.complete(transaction);
+        accountRepository.save(account);
 
         return ApiResponse.OK.toResponse();
     }
 
-    @Transactional
+//    @Transactional
     public ResponseEntity<String> deposit(User user, TransactionRequest request) {
         Account account = user.getAccount();
         Double amount = request.getAmount();
@@ -52,13 +59,20 @@ public class AccountService {
             return ApiResponse.INVALID_AMOUNT.toResponse();
         }
 
+        System.out.println(amount);
+
         Transaction transaction = new Transaction(amount, account, TransactionType.DEPOSIT);
+        transactionRepository.save(transaction);
+
+        System.out.println(transaction);
+
         account.complete(transaction);
+        accountRepository.save(account);
 
         return ApiResponse.OK.toResponse();
     }
 
-    @Transactional
+//    @Transactional
     public ResponseEntity<String> transfer(User user, TransactionRequest request) {
         User recipient = userDetailsService.getUserById(request.getRecipientId());
         if (recipient == null) {
@@ -76,8 +90,11 @@ public class AccountService {
 
         Account recipientAccount = recipient.getAccount();
         Transaction transaction = new Transaction(amount, senderAccount, recipientAccount, TransactionType.TRANSFER, request.getMessage());
+        transactionRepository.save(transaction);
+
         senderAccount.complete(transaction);
         recipientAccount.complete(transaction);
+        accountRepository.saveAll(List.of(senderAccount, recipientAccount));
 
         return ApiResponse.OK.toResponse();
     }

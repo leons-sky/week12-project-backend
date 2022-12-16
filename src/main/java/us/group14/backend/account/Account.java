@@ -1,12 +1,15 @@
 package us.group14.backend.account;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import us.group14.backend.transaction.Transaction;
 import us.group14.backend.user.User;
 
 import java.util.Set;
 
 @Entity
+@Table(name = "accounts")
 public class Account {
 
     @Id
@@ -23,11 +26,15 @@ public class Account {
     @Column(nullable = false)
     private Double balance;
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "Transaction")
+    @JoinColumn(name = "Transaction")
     private Set<Transaction> transactions;
+
+    public Account() {
+        this.balance = 0d;
+    }
 
     public Long getId() {
         return id;
@@ -63,10 +70,12 @@ public class Account {
 
     public void withdraw(double amount) {
         this.balance = this.balance - amount;
+        System.out.println("WITHDRAW " + this.balance);
    }
 
     public void deposit(double amount) {
         this.balance = this.balance + amount;
+        System.out.println("DEPOSIT " + this.balance);
     }
 
     public void complete(Transaction transaction) {
@@ -87,5 +96,15 @@ public class Account {
         }
 
         this.addTransaction(transaction);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", balance=" + balance +
+                ", user=" + user.getId() +
+                ", transactions=" + transactions +
+                '}';
     }
 }

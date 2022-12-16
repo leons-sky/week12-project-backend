@@ -4,11 +4,14 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
+import us.group14.backend.account.Account;
+import us.group14.backend.account.AccountRepository;
 import us.group14.backend.constants.ApiCookie;
 import us.group14.backend.constants.ApiResponse;
 import us.group14.backend.registration.token.ConfirmationToken;
@@ -26,6 +29,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final Argon2PasswordEncoder argon2PasswordEncoder;
     private final UserDetailsService userDetailsService;
     private final ConfirmationTokenService confirmationTokenService;
@@ -44,7 +48,15 @@ public class UserService {
         String encodedPassword = argon2PasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
 
+        Account account = new Account();
+        accountRepository.save(account);
         userRepository.save(user);
+
+        user.setAccount(account);
+        account.setUser(user);
+
+        userRepository.save(user);
+        accountRepository.save(account);
 
         ConfirmationToken token = confirmationTokenService.createConfirmationToken(user);
         return ResponseEntity.ok(token.getToken());
@@ -91,18 +103,29 @@ public class UserService {
     }
 
     @Transactional
-    public void addContact(User user, Long id) {
-        User contact = userRepository.findById(id).orElse(null);
+    public void addContact(User user, String username) {
+        Hibernate.initialize(user);
+
+        User contact = userDetailsService.loadUserByUsername(username);
+        Hibernate.initialize(contact);
+
+        System.out.println(contact);
         user.addContact(contact);
     }
 
+    @Transactional
     public Set<User> getContacts(User user) {
+        Hibernate.initialize(user);
         return user.getContacts();
     }
 
     @Transactional
     public void deleteContact(User user, Long id) {
+        Hibernate.initialize(user);
+
         User contact = userRepository.findById(id).orElse(null);
+        Hibernate.initialize(contact);
+
         user.deleteContact(contact);
 
 
