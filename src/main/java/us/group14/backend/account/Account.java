@@ -54,11 +54,11 @@ public class Account {
     }
 
     public Set<Transaction> getTransactions() {
-        return transactions;
+        return this.transactions;
     }
 
-    public void setTransactions(Set<Transaction>transactions) {
-        transactions = transactions;
+    public void addTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
     }
 
     public void withdraw(double amount) {
@@ -85,5 +85,7 @@ public class Account {
                 }
             }
         }
+
+        this.addTransaction(transaction);
     }
 }
