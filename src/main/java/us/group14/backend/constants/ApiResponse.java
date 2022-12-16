@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public enum ApiResponse {
-    OK(HttpStatus.OK, null),
+    OK(HttpStatus.OK, "OK"),
     EXCEEDS_BALANCE(HttpStatus.BAD_REQUEST, "Amount exceeds balance"),
     INVALID_AMOUNT(HttpStatus.BAD_REQUEST, "Amount is not valid"),
     INVALID_LIMIT(HttpStatus.BAD_REQUEST, "Invalid limit, must be [0, 100]"),

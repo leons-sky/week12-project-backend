@@ -8,6 +8,7 @@ import org.hibernate.Hibernate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import us.group14.backend.account.Account;
@@ -101,32 +102,32 @@ public class UserService {
         return ApiResponse.OK.toResponse();
     }
 
-//    @Transactional
-//    public void addContact(User user, String username) {
-//        //Hibernate.initialize(user);
-//
-//        User contact = userDetailsService.loadUserByUsername(username);
-//        //Hibernate.initialize(contact);
-//
-//        System.out.println(contact);
-//        user.addContact(contact);
-//    }
+    @Transactional
+    public ResponseEntity<String> addContact(User user, String username) {
+        User contact;
+        try {
+            contact = userDetailsService.loadUserByUsername(username);
+        } catch (UsernameNotFoundException e) {
+            return ApiResponse.USER_NOT_FOUND.toResponse();
+        }
 
-//    @Transactional
-//    public Set<User> getContacts(User user) {
-//        //Hibernate.initialize(user);
-//        return user.getContacts();
-//    }
-//
-//    @Transactional
-//    public void deleteContact(User user, Long id) {
-//        //Hibernate.initialize(user);
-//
-//        User contact = userRepository.findById(id).orElse(null);
-//        //Hibernate.initialize(contact);
-//
-//        user.deleteContact(contact);
-//
-//
-//    }
+        user.addContact(contact);
+        return ApiResponse.OK.toResponse();
+    }
+
+    @Transactional
+    public ResponseEntity<Set<User>> getContacts(User user) {
+        return ResponseEntity.ok(user.getContacts());
+    }
+
+    @Transactional
+    public ResponseEntity<String> deleteContact(User user, Long id) {
+        User contact = userRepository.findById(id).orElse(null);
+        if (contact == null) {
+            return ApiResponse.USER_NOT_FOUND.toResponse();
+        }
+
+        user.deleteContact(contact);
+        return ApiResponse.OK.toResponse();
+    }
 }

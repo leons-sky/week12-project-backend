@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 import us.group14.backend.transaction.Transaction;
-import us.group14.backend.transaction.TransactionAndAccountView;
+import us.group14.backend.views.TransactionAndAccountView;
 import us.group14.backend.user.User;
+import us.group14.backend.views.UserAndAccountView;
 
 import java.util.Objects;
 import java.util.Set;
@@ -28,11 +29,11 @@ public class Account {
             strategy = GenerationType.SEQUENCE,
             generator = "account_sequence"
     )
-    @JsonView(TransactionAndAccountView.class)
+    @JsonView({UserAndAccountView.class, TransactionAndAccountView.class})
     private Long id;
 
     @Column(nullable = false)
-    @JsonView(TransactionAndAccountView.class)
+    @JsonView({UserAndAccountView.class, TransactionAndAccountView.class})
     private Double balance;
 
     //mappedBy = "account",

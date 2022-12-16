@@ -1,3 +1,3 @@
-package us.group14.backend.transaction;
+package us.group14.backend.views;
 
 public class TransactionAndAccountView { }

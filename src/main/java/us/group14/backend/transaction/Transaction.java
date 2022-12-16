@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 import us.group14.backend.account.Account;
+import us.group14.backend.views.TransactionAndAccountView;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

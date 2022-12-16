@@ -1,3 +1,3 @@
-package us.group14.backend.user;
+package us.group14.backend.views;
 
-public class UserView { }
+public class UserAndAccountView { }

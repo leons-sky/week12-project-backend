@@ -11,7 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import us.group14.backend.account.Account;
-import us.group14.backend.transaction.TransactionAndAccountView;
+import us.group14.backend.views.TransactionAndAccountView;
+import us.group14.backend.views.UserAndAccountView;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -36,19 +37,19 @@ public class User implements UserDetails {
             strategy = GenerationType.SEQUENCE,
             generator = "user_sequence"
     )
-    @JsonView({UserView.class, TransactionAndAccountView.class})
+    @JsonView({UserAndAccountView.class, TransactionAndAccountView.class})
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @JsonView({UserView.class, TransactionAndAccountView.class})
+    @JsonView({UserAndAccountView.class, TransactionAndAccountView.class})
     private String username;
 
     @Column(nullable = false)
-    @JsonView({UserView.class, TransactionAndAccountView.class})
+    @JsonView({UserAndAccountView.class, TransactionAndAccountView.class})
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @JsonView({UserView.class, TransactionAndAccountView.class})
+    @JsonView({UserAndAccountView.class, TransactionAndAccountView.class})
     private UserRole userRole;
 
     @Column(nullable = false)
@@ -57,21 +58,22 @@ public class User implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = false;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name="contacts",
-//            joinColumns=@JoinColumn(name="userId"),
-//            inverseJoinColumns=@JoinColumn(name="contactId")
-//    )
-//    private Set<User> contacts;
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name="contacts",
-//            joinColumns=@JoinColumn(name="contactId"),
-//            inverseJoinColumns=@JoinColumn(name="userId")
-//    )
-//    private Set<User> contactsOf;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="contacts",
+            joinColumns=@JoinColumn(name="userId"),
+            inverseJoinColumns=@JoinColumn(name="contactId")
+    )
+    private Set<User> contacts;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="contacts",
+            joinColumns=@JoinColumn(name="contactId"),
+            inverseJoinColumns=@JoinColumn(name="userId")
+    )
+    private Set<User> contactsOf;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
+    @JsonView({UserAndAccountView.class})
     private Account account;
 
     public User(String username, String email, String password, UserRole userRole) {
@@ -130,13 +132,11 @@ public class User implements UserDetails {
         return getClass().hashCode();
     }
 
+    public void addContact(User contact) {
+        this.contacts.add(contact);
+    }
 
-//    public void addContact(User contact) {
-//        this.contacts.add(contact);
-//
-//    }
-//
-//    public void deleteContact(User contact) {
-//        this.contacts.remove(contact);
-//    }
+    public void deleteContact(User contact) {
+        this.contacts.remove(contact);
+    }
 }

@@ -5,16 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.group14.backend.annotations.ApiMapping;
-import us.group14.backend.constants.ApiResponse;
 import us.group14.backend.transaction.Transaction;
-import us.group14.backend.transaction.TransactionAndAccountView;
+import us.group14.backend.views.TransactionAndAccountView;
 import us.group14.backend.transaction.TransactionRequest;
 import us.group14.backend.transaction.TransactionService;
 import us.group14.backend.user.AuthUser;
 import us.group14.backend.user.User;
-import us.group14.backend.user.UserView;
-
-import java.util.List;
 
 @RestController
 @ApiMapping("/account")
