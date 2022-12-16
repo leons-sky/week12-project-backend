@@ -21,7 +21,6 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
@@ -63,12 +62,15 @@ public class User implements UserDetails {
             joinColumns=@JoinColumn(name="userId"),
             inverseJoinColumns=@JoinColumn(name="contactId")
     )
+    @JsonView({UserAndAccountView.class})
     private Set<User> contacts;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="contacts",
             joinColumns=@JoinColumn(name="contactId"),
             inverseJoinColumns=@JoinColumn(name="userId")
     )
+    @JsonView({UserAndAccountView.class})
     private Set<User> contactsOf;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -138,5 +140,21 @@ public class User implements UserDetails {
 
     public void deleteContact(User contact) {
         this.contacts.remove(contact);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", userRole=" + userRole +
+                ", password='" + password + '\'' +
+                ", locked=" + locked +
+                ", enabled=" + enabled +
+                ", contacts=" + contacts.stream().map(u -> u.getId()).toList() +
+                ", contactsOf=" + contactsOf.stream().map(u -> u.getId()).toList() +
+                ", account=" + account.getId() +
+                '}';
     }
 }

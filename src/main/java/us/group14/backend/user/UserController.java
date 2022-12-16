@@ -18,10 +18,16 @@ public class UserController {
     private final UserService userService;
 
 
-    @GetMapping
+    @GetMapping("/all")
     @JsonView(UserAndAccountView.class)
     public ResponseEntity<List<User>> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping
+    @JsonView(UserAndAccountView.class)
+    public ResponseEntity<User> getUser(AuthUser authUser) {
+        return ResponseEntity.ok(authUser.get());
     }
 
     @PostMapping("/contacts/{username}")
