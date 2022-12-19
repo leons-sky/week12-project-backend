@@ -33,8 +33,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("logout")
-    public ResponseEntity<String> unauthenticate(HttpServletResponse response) {
-        return userService.unauthenticate(response);
+    public ResponseEntity<String> unauthenticate(HttpServletRequest request, HttpServletResponse response) {
+        return userService.unauthenticate(request, response);
     }
 
 }
