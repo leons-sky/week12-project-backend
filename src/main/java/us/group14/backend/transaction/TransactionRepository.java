@@ -9,13 +9,14 @@ import us.group14.backend.account.Account;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-//    @Query("SELECT t FROM Transaction t JOIN t.sender a ON t.sender.id == a.id WHERE a.id == ?1")
-//    Page<Transaction> findFromAccountWithPageable(Long accountId, Pageable pageable);
-//
-//    @Query("SELECT t FROM Transaction t JOIN t.sender a, t.recipient b ON t.sender.id == a.id OR t.recipient.id == b.id WHERE (a.id == ?1 OR b.id == ?1) AND t.id == ?2")
-//    Optional<Transaction> findFromAccountWithId(Long accountId, Long id);
+    @Query("SELECT t FROM Transaction t WHERE t.recipient.id = ?1 OR t.sender.id = ?1")
+    Set<Transaction> findFromAccount(Long accountId);
+
+    @Query("SELECT t FROM Transaction t WHERE (t.recipient.id = ?1 OR t.sender.id = ?1) AND t.id = ?2")
+    Optional<Transaction> findFromAccountWithId(Long accountId, Long transactionId);
 }

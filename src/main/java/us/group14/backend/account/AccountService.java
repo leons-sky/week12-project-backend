@@ -2,6 +2,7 @@ package us.group14.backend.account;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import us.group14.backend.constants.ApiResponse;
@@ -27,12 +28,14 @@ public class AccountService {
     }
 
     public ResponseEntity<Double> getBalance(User user) {
+        //Hibernate.initialize(user);
         Account account = user.getAccount();
         return ResponseEntity.ok(account.getBalance());
     }
 
 //    @Transactional
     public ResponseEntity<String> withdraw(User user, TransactionRequest request) {
+        //Hibernate.initialize(user);
         Account account = user.getAccount();
         Double amount = request.getAmount();
         if (amount == null) {
@@ -42,10 +45,13 @@ public class AccountService {
             return ApiResponse.EXCEEDS_BALANCE.toResponse();
         }
 
-        Transaction transaction = new Transaction(amount, account, TransactionType.WITHDRAW);
-        transactionRepository.save(transaction);
+        Transaction transaction = transactionRepository.save(
+                new Transaction(amount, TransactionType.WITHDRAW)
+        );
 
-        account.complete(transaction);
+        transaction.complete(account);
+
+        transactionRepository.save(transaction);
         accountRepository.save(account);
 
         return ApiResponse.OK.toResponse();
@@ -53,6 +59,7 @@ public class AccountService {
 
 //    @Transactional
     public ResponseEntity<String> deposit(User user, TransactionRequest request) {
+        //Hibernate.initialize(user);
         Account account = user.getAccount();
         Double amount = request.getAmount();
         if (amount == null) {
@@ -61,12 +68,13 @@ public class AccountService {
 
         System.out.println(amount);
 
-        Transaction transaction = new Transaction(amount, account, TransactionType.DEPOSIT);
+        Transaction transaction = transactionRepository.save(
+                new Transaction(amount, TransactionType.DEPOSIT)
+        );
+
+        transaction.complete(account);
+
         transactionRepository.save(transaction);
-
-        System.out.println(transaction);
-
-        account.complete(transaction);
         accountRepository.save(account);
 
         return ApiResponse.OK.toResponse();
@@ -74,6 +82,7 @@ public class AccountService {
 
 //    @Transactional
     public ResponseEntity<String> transfer(User user, TransactionRequest request) {
+        //Hibernate.initialize(user);
         User recipient = userDetailsService.getUserById(request.getRecipientId());
         if (recipient == null) {
             return ApiResponse.USER_NOT_FOUND.toResponse();
@@ -89,11 +98,13 @@ public class AccountService {
         }
 
         Account recipientAccount = recipient.getAccount();
-        Transaction transaction = new Transaction(amount, senderAccount, recipientAccount, TransactionType.TRANSFER, request.getMessage());
-        transactionRepository.save(transaction);
+        Transaction transaction = transactionRepository.save(
+                new Transaction(amount, TransactionType.TRANSFER, request.getMessage())
+        );
 
-        senderAccount.complete(transaction);
-        recipientAccount.complete(transaction);
+        transaction.complete(recipientAccount, senderAccount);
+
+        transactionRepository.save(transaction);
         accountRepository.saveAll(List.of(senderAccount, recipientAccount));
 
         return ApiResponse.OK.toResponse();

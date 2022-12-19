@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.group14.backend.annotations.ApiMapping;
+import us.group14.backend.views.UserAndAccountView;
 
 import java.util.List;
 import java.util.Set;
@@ -17,30 +18,31 @@ public class UserController {
     private final UserService userService;
 
 
-    @GetMapping
-    @JsonView(UserView.class)
+    @GetMapping("/all")
+    @JsonView(UserAndAccountView.class)
     public ResponseEntity<List<User>> getAllUsers() {
         return userService.getAllUsers();
     }
 
+    @GetMapping
+    @JsonView(UserAndAccountView.class)
+    public ResponseEntity<User> getUser(AuthUser authUser) {
+        return ResponseEntity.ok(authUser.get());
+    }
+
     @PostMapping("/contacts/{username}")
-    public void addContact(AuthUser user, @PathVariable("username") String username) {
-        User u = user.get();
-        System.out.println(u);
-        userService.addContact(u, username);
+    public ResponseEntity<String> addContact(AuthUser authUser, @PathVariable("username") String username) {
+        return userService.addContact(authUser.get(), username);
     }
 
     @GetMapping("/contacts")
-    public Set<User> getContacts(AuthUser user){
-        return userService.getContacts(user.get());
+    public ResponseEntity<Set<User>> getContacts(AuthUser authUser){
+        return userService.getContacts(authUser.get());
     }
 
     @DeleteMapping("/contacts/{id}")
-    public void deleteContact(AuthUser user, @PathVariable("id") Long id) {
-        userService.deleteContact(user.get(), id);
-//        AuthUser deleteContact = authUserRepository.findById(id).get();
-//        authUserRepository.delete(deleteContact);
-//        return "Contact deleted";
+    public ResponseEntity<String> deleteContact(AuthUser authUser, @PathVariable("id") Long id) {
+        return userService.deleteContact(authUser.get(), id);
     }
 
 

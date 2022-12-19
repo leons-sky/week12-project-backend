@@ -1,15 +1,19 @@
 package us.group14.backend.transaction;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import jakarta.persistence.spi.PersistenceUnitTransactionType;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.bouncycastle.cms.Recipient;
+import lombok.Setter;
+import org.hibernate.Hibernate;
 import us.group14.backend.account.Account;
-import us.group14.backend.user.User;
+import us.group14.backend.views.TransactionAndAccountView;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "transactions")
@@ -25,92 +29,130 @@ public class Transaction {
             strategy = GenerationType.SEQUENCE,
             generator = "transaction_sequence"
     )
+    @JsonView(TransactionAndAccountView.class)
     private Long id;
+
     @Column(nullable = false)
+    @JsonView(TransactionAndAccountView.class)
     private Double amount;
-    @Column(nullable = false)
+
+    @JsonView(TransactionAndAccountView.class)
     private LocalDateTime transferredAt;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "recipient")
+    @JoinColumn(name = "recipient_id")
+    @JsonView(TransactionAndAccountView.class)
     private Account recipient;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "sender")
+    @JoinColumn(name = "sender_id")
+    @JsonView(TransactionAndAccountView.class)
     private Account sender;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @JsonView(TransactionAndAccountView.class)
     private TransactionType type;
+
+    @JsonView(TransactionAndAccountView.class)
     private String message;
 
-    public Transaction(Double amount, Account sender, TransactionType type) {
+    public Transaction(Double amount, TransactionType type) {
         this.amount = amount;
-        this.sender = sender;
         this.type = type;
-        this.transferredAt = LocalDateTime.now();
     }
 
-    public Transaction(Double amount, Account sender, Account recipient, TransactionType type, String message) {
+    public Transaction(Double amount, TransactionType type, String message) {
         this.amount = amount;
-        this.sender = sender;
-        this.recipient = recipient;
         this.type = type;
         this.message = message;
-        this.transferredAt = LocalDateTime.now();
     }
 
-    public Long getId() {
-        return id;
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+//
+//    public Double getAmount() {
+//        return amount;
+//    }
+//
+//    public void setAmount(Double amount) {
+//        this.amount = amount;
+//    }
+//
+//    public LocalDateTime getTransferredAt() {
+//        return transferredAt;
+//    }
+//
+//    public void setTransferredAt(LocalDateTime transferredAt) {
+//        this.transferredAt = transferredAt;
+//    }
+//
+//    public Account getRecipient() {
+//        return recipient;
+//    }
+//
+//    public void setRecipient(Account recipient) {
+//        this.recipient = recipient;
+//    }
+//
+//    public Account getSender() {
+//        return sender;
+//    }
+//
+//    public void setSender(Account sender) {
+//        this.sender = sender;
+//    }
+//
+//    public TransactionType getType() {
+//        return type;
+//    }
+//
+//    public void setType(TransactionType type) {
+//        this.type = type;
+//    }
+//
+//    public String getMessage() {
+//        return message;
+//    }
+//
+//    public void setMessage(String message) {
+//        this.message = message;
+//    }
+
+    public void complete(Account account) {
+        switch (getType()) {
+            case DEPOSIT -> {
+                account.deposit(getAmount());
+                setRecipient(account);
+                setTransferredAt(LocalDateTime.now());
+            }
+            case WITHDRAW -> {
+                account.withdraw(getAmount());
+                setSender(account);
+                setTransferredAt(LocalDateTime.now());
+            }
+        }
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void complete(Account recipient, Account sender) {
+        switch (getType()) {
+            case TRANSFER -> {
+                //Sending money
+                sender.withdraw(getAmount());
 
-    public Double getAmount() {
-        return amount;
-    }
+                //Receiving money
+                recipient.deposit(getAmount());
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public LocalDateTime getTransferredAt() {
-        return transferredAt;
-    }
-
-    public void setTransferredAt(LocalDateTime transferredAt) {
-        this.transferredAt = transferredAt;
-    }
-
-    public Account getRecipient() {
-        return recipient;
-    }
-
-    public void setRecipient(Account recipient) {
-        this.recipient = recipient;
-    }
-
-    public Account getSender() {
-        return sender;
-    }
-
-    public void setSender(Account sender) {
-        this.sender = sender;
-    }
-
-    public TransactionType getType() {
-        return type;
-    }
-
-    public void setType(TransactionType type) {
-        this.type = type;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+                setSender(sender);
+                setRecipient(recipient);
+                setTransferredAt(LocalDateTime.now());
+            }
+        }
     }
 
     @Override
@@ -124,5 +166,18 @@ public class Transaction {
                 ", type=" + type +
                 ", message='" + message + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Transaction that = (Transaction) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

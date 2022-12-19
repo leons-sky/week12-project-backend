@@ -13,6 +13,7 @@ import us.group14.backend.user.User;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -21,23 +22,20 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
 
     public ResponseEntity<?> getTransactions(User user, Integer limit) {
-        if (limit == null) {
-            limit = 100;
-        } else if (limit < 0 || limit > 100) {
+        if (limit < 0 || limit > 100) {
             return ApiResponse.INVALID_LIMIT.toResponse();
         }
 
         Account account = user.getAccount();
-        List<Transaction> transactions = account.getTransactions().stream().sorted(Comparator.comparing(Transaction::getTransferredAt).reversed()).limit(limit).toList();
-//        Pageable recent = PageRequest.of(0, limit, Sort.Direction.DESC, "id");
-//        Page<Transaction> transactions = transactionRepository.findFromAccountWithPageable(account.getId(), recent);
+        List<Transaction> transactions = transactionRepository.findFromAccount(account.getId())
+                .stream().sorted(Comparator.comparing(Transaction::getTransferredAt).reversed()).limit(limit).toList();
+
         return ResponseEntity.ok(transactions);
     }
 
     public ResponseEntity<Transaction> getTransaction(User user, Long id) {
         Account account = user.getAccount();
-        Transaction transaction = account.getTransactions().stream().filter(t -> t.getId() == id).findFirst().orElse(null);
-//        Transaction transaction = transactionRepository.findFromAccountWithId(account.getId(), id).orElse(null);
+        Transaction transaction = transactionRepository.findFromAccountWithId(account.getId(), id).orElse(null);
         return ResponseEntity.ok(transaction);
     }
 }
