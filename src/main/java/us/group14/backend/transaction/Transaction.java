@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 import us.group14.backend.account.Account;
+import us.group14.backend.views.AllUserInfoView;
 import us.group14.backend.views.TransactionAndAccountView;
 
 import java.time.LocalDateTime;
@@ -29,14 +30,14 @@ public class Transaction {
             strategy = GenerationType.SEQUENCE,
             generator = "transaction_sequence"
     )
-    @JsonView(TransactionAndAccountView.class)
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
     private Long id;
 
     @Column(nullable = false)
-    @JsonView(TransactionAndAccountView.class)
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
     private Double amount;
 
-    @JsonView(TransactionAndAccountView.class)
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
     private LocalDateTime transferredAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -51,10 +52,10 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @JsonView(TransactionAndAccountView.class)
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
     private TransactionType type;
 
-    @JsonView(TransactionAndAccountView.class)
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
     private String message;
 
     public Transaction(Double amount, TransactionType type) {

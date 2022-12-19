@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.group14.backend.annotations.ApiMapping;
+import us.group14.backend.views.AllUserInfoView;
+import us.group14.backend.views.ContactsView;
 import us.group14.backend.views.UserAndAccountView;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public class UserController {
 
 
     @GetMapping("/all")
-    @JsonView(UserAndAccountView.class)
+    @JsonView(AllUserInfoView.class)
     public ResponseEntity<List<User>> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -36,7 +38,8 @@ public class UserController {
     }
 
     @GetMapping("/contacts")
-    public ResponseEntity<Set<User>> getContacts(AuthUser authUser){
+    @JsonView(ContactsView.class)
+    public ResponseEntity<Set<Contact>> getContacts(AuthUser authUser){
         return userService.getContacts(authUser.get());
     }
 

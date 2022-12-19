@@ -1,22 +1,16 @@
 package us.group14.backend.user;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import us.group14.backend.account.Account;
 import us.group14.backend.account.AccountRepository;
-import us.group14.backend.constants.ApiCookie;
 import us.group14.backend.constants.ApiResponse;
 import us.group14.backend.registration.token.ConfirmationToken;
 import us.group14.backend.registration.token.ConfirmationTokenService;
@@ -24,6 +18,7 @@ import us.group14.backend.security.AuthenticationRequest;
 import us.group14.backend.security.config.JwtUtil;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -37,6 +32,7 @@ public class UserService {
     private final Argon2PasswordEncoder argon2PasswordEncoder;
     private final UserDetailsService userDetailsService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final ContactRepository contactRepository;
 
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userRepository.findAll());
@@ -105,32 +101,43 @@ public class UserService {
         return ApiResponse.OK.toResponse();
     }
 
-    @Transactional
     public ResponseEntity<String> addContact(User user, String username) {
-        User contact;
+        User contactUser;
         try {
-            contact = userDetailsService.loadUserByUsername(username);
+            contactUser = userDetailsService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
             return ApiResponse.USER_NOT_FOUND.toResponse();
         }
 
-        user.addContact(contact);
+        if (contactRepository.getContactFromUser(user.getId(), contactUser.getId()).isPresent()) {
+            return ApiResponse.CONTACT_ALREADY_ADDED.toResponse();
+        }
+
+        contactRepository.save(new Contact(user, contactUser));
+        userRepository.save(user);
+
         return ApiResponse.OK.toResponse();
     }
 
-    @Transactional
-    public ResponseEntity<Set<User>> getContacts(User user) {
-        return ResponseEntity.ok(user.getContacts());
+    public ResponseEntity<Set<Contact>> getContacts(User user) {
+        return ResponseEntity.ok(contactRepository.getContactsForUser(user.getId()));
     }
 
-    @Transactional
     public ResponseEntity<String> deleteContact(User user, Long id) {
-        User contact = userRepository.findById(id).orElse(null);
-        if (contact == null) {
+        User contactUser = userRepository.findById(id).orElse(null);
+        if (contactUser == null) {
             return ApiResponse.USER_NOT_FOUND.toResponse();
         }
 
-        user.deleteContact(contact);
+        Optional<Contact> contactOptional = contactRepository.getContactFromUser(user.getId(), contactUser.getId());
+        if (contactOptional.isEmpty()) {
+            return ApiResponse.CONTACT_NOT_FOUND.toResponse();
+        }
+
+        Contact contact = contactOptional.get();
+        contactRepository.delete(contact);
+        userRepository.save(user);
+
         return ApiResponse.OK.toResponse();
     }
 }

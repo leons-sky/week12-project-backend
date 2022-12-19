@@ -16,7 +16,9 @@ public enum ApiResponse {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
     USER_AUTH_FAILED(HttpStatus.UNAUTHORIZED, "Invalid username or password"),
     USER_DISABLED(HttpStatus.CONFLICT, "User disabled"),
-    USER_LOCKED(HttpStatus.FORBIDDEN, "User locked");
+    USER_LOCKED(HttpStatus.FORBIDDEN, "User locked"),
+    CONTACT_NOT_FOUND(HttpStatus.NOT_FOUND, "Contact not found"),
+    CONTACT_ALREADY_ADDED(HttpStatus.BAD_REQUEST, "Contact already added");
 
     private final HttpStatus status;
     private final String message;
