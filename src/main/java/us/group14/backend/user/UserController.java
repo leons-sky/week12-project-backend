@@ -43,9 +43,9 @@ public class UserController {
         return userService.getContacts(authUser.get());
     }
 
-    @DeleteMapping("/contacts/{id}")
-    public ResponseEntity<String> deleteContact(AuthUser authUser, @PathVariable("id") Long id) {
-        return userService.deleteContact(authUser.get(), id);
+    @DeleteMapping("/contacts/{username}")
+    public ResponseEntity<String> deleteContact(AuthUser authUser, @PathVariable("username") String username) {
+        return userService.deleteContact(authUser.get(), username);
     }
 
 

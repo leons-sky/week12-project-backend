@@ -70,8 +70,10 @@ public class UserService {
     }
 
     public ResponseEntity<String> authenticate(HttpServletResponse response, String username, String password) {
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if (userDetails == null){
+        UserDetails userDetails;
+        try {
+            userDetails = userDetailsService.loadUserByUsername(username);
+        } catch (UsernameNotFoundException e) {
             return ApiResponse.USER_AUTH_FAILED.toResponse();
         }
 
@@ -123,9 +125,11 @@ public class UserService {
         return ResponseEntity.ok(contactRepository.getContactsForUser(user.getId()));
     }
 
-    public ResponseEntity<String> deleteContact(User user, Long id) {
-        User contactUser = userRepository.findById(id).orElse(null);
-        if (contactUser == null) {
+    public ResponseEntity<String> deleteContact(User user, String username) {
+        User contactUser;
+        try {
+            contactUser = userDetailsService.loadUserByUsername(username);
+        } catch (UsernameNotFoundException e) {
             return ApiResponse.USER_NOT_FOUND.toResponse();
         }
 
