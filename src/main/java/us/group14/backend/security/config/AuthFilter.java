@@ -20,6 +20,7 @@ import us.group14.backend.constants.ApiCookie;
 import us.group14.backend.constants.ApiResponse;
 import us.group14.backend.user.User;
 import us.group14.backend.user.UserDetailsService;
+import us.group14.backend.user.UserService;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -60,7 +61,8 @@ public class AuthFilter extends OncePerRequestFilter {
             try {
                 user = userDetailsService.loadUserByUsername(username);
             } catch (UsernameNotFoundException e) {
-                System.out.println("ERROR");
+                userDetailsService.unauthenticate(request, response);
+
                 ResponseEntity<String> responseEntity = ApiResponse.USER_NOT_FOUND.toResponse();
 
                 response.setContentType("application/json");
