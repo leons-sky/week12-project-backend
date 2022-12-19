@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.group14.backend.annotations.ApiMapping;
 import us.group14.backend.transaction.Transaction;
+import us.group14.backend.views.AccountView;
 import us.group14.backend.views.TransactionAndAccountView;
 import us.group14.backend.transaction.TransactionRequest;
 import us.group14.backend.transaction.TransactionService;
@@ -21,6 +22,7 @@ public class AccountController {
     private final TransactionService transactionService;
 
     @GetMapping
+    @JsonView(AccountView.class)
     public ResponseEntity<Account> getAccount(AuthUser authUser) {
         User user = authUser.get();
         return accountService.getAccount(user);
