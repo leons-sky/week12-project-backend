@@ -1,12 +1,15 @@
 package us.group14.backend.user;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -70,6 +73,15 @@ public class UserService {
         return this.authenticate(response, request.getUsername(), request.getPassword());
     }
 
+    private Cookie createAuthCookie(String token) {
+        Cookie cookie = new Cookie(ApiCookie.AUTH_COOKIE.get(), token);
+//        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(token == null ? 0 : 60 * 60 * 24);
+        return cookie;
+    }
+
     public ResponseEntity<String> authenticate(HttpServletResponse response, String username, String password) {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (userDetails == null){
@@ -91,13 +103,21 @@ public class UserService {
             return ApiResponse.USER_AUTH_FAILED.toResponse();
         }
 
-        Cookie cookie = new Cookie(ApiCookie.AUTH_COOKIE.get(), jwtUtil.generateToken(userDetails));
-//        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24);
-
+        Cookie cookie = createAuthCookie(jwtUtil.generateToken(userDetails));
         response.addCookie(cookie);
+
+        return ApiResponse.OK.toResponse();
+    }
+
+    public ResponseEntity<String> unauthenticate(HttpServletRequest request, HttpServletResponse response) {
+        Cookie cookie = createAuthCookie(null);
+        response.addCookie(cookie);
+
+        HttpSession session = request.getSession(false);
+        SecurityContextHolder.clearContext();
+        if (session != null) {
+            session.invalidate();
+        }
 
         return ApiResponse.OK.toResponse();
     }

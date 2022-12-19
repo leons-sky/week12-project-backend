@@ -152,8 +152,8 @@ public class User implements UserDetails {
                 ", password='" + password + '\'' +
                 ", locked=" + locked +
                 ", enabled=" + enabled +
-                ", contacts=" + contacts.stream().map(u -> u.getId()).toList() +
-                ", contactsOf=" + contactsOf.stream().map(u -> u.getId()).toList() +
+                ", contacts=" + contacts.stream().map(User::getId).toList() +
+                ", contactsOf=" + contactsOf.stream().map(User::getId).toList() +
                 ", account=" + account.getId() +
                 '}';
     }

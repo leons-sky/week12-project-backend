@@ -27,9 +27,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(authCookie != null);
     }
 
-    @PostMapping
+    @PostMapping("login")
     public ResponseEntity<String> authenticate(HttpServletResponse response, @RequestBody AuthenticationRequest request) {
         return userService.authenticate(response, request);
+    }
+
+    @PostMapping("logout")
+    public ResponseEntity<String> unauthenticate(HttpServletResponse response) {
+        return userService.unauthenticate(response);
     }
 
 }
