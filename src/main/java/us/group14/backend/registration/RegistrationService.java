@@ -32,17 +32,22 @@ public class RegistrationService {
             return ApiResponse.INVALID_EMAIL.toResponse();
         }
 
-        ResponseEntity<String> token = userService.register(new User(
+        ResponseEntity<String> response = userService.register(new User(
                 request.getUsername(),
                 request.getEmail(),
                 request.getPassword(),
                 UserRole.USER
         ));
 
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            return response;
+        }
+
+        String token = response.getBody();
         String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
         emailService.send(request.getEmail(), confirmationEmail.build(request.getUsername(), link));
 
-        return token;
+        return response;
     }
 
     @Transactional
