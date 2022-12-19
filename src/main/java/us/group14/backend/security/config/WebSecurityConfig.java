@@ -62,7 +62,7 @@ public class WebSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("*"));
@@ -73,18 +73,18 @@ public class WebSecurityConfig {
         return source;
     }
 
-    @Bean
-    public WebMvcConfigurer corsMappingConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*")
-                        .allowedHeaders("*")
-                        .exposedHeaders("*")
-                        .maxAge(3600L);
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsMappingConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedOrigins("http://localhost:3000/")
+//                        .allowedMethods("*")
+//                        .allowedHeaders("*")
+//                        .exposedHeaders("*")
+//                        .maxAge(3600L);
+//            }
+//        };
+//    }
 }
