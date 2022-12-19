@@ -1,4 +1,4 @@
-package us.group14.backend.annotations.config;
+package us.group14.backend.security.config;
 
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
 import org.springframework.context.annotation.Bean;
