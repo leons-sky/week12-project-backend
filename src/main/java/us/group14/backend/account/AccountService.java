@@ -24,7 +24,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
     public ResponseEntity<Account> getAccount(User user) {
-        return ResponseEntity.ok(user.getAccount());
+        return ResponseEntity.ok(accountRepository.getAccountForUser(user.getId()));
     }
 
     public ResponseEntity<Double> getBalance(User user) {
