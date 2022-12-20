@@ -2,6 +2,7 @@ package us.group14.backend.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.group14.backend.annotations.ApiMapping;
@@ -29,7 +30,8 @@ public class UserController {
     @GetMapping
     @JsonView(UserAndAccountView.class)
     public ResponseEntity<User> getUser(AuthUser authUser) {
-        return ResponseEntity.ok(authUser.get());
+        User user = authUser.get();
+        return userService.getUser(user);
     }
 
     @PostMapping("/contacts/{username}")

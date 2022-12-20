@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import us.group14.backend.account.Account;
 import us.group14.backend.views.AllUserInfoView;
 import us.group14.backend.views.TransactionAndAccountView;
+import us.group14.backend.views.UserAndAccountView;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -30,14 +31,14 @@ public class Transaction {
             strategy = GenerationType.SEQUENCE,
             generator = "transaction_sequence"
     )
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
     private Long id;
 
     @Column(nullable = false)
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
     private Double amount;
 
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
     private LocalDateTime transferredAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -52,10 +53,10 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
     private TransactionType type;
 
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
     private String message;
 
     public Transaction(Double amount, TransactionType type) {

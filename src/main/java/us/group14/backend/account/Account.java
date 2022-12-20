@@ -51,9 +51,13 @@ public class Account {
         this.user = user;
     }
 
-//    @OneToMany(fetch = FetchType.EAGER)
-//    @JsonView(AllUserInfoView.class)
-//    private Set<Transaction> transactions;
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL)
+    @JsonView({AllUserInfoView.class, UserAndAccountView.class})
+    private Set<Transaction> incomingTransactions;
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    @JsonView({AllUserInfoView.class, UserAndAccountView.class})
+    private Set<Transaction> outgoingTransactions;
 
     public Account() {
         this.balance = 0d;
@@ -107,7 +111,8 @@ public class Account {
                 "id=" + id +
                 ", balance=" + balance +
                 ", user=" + user.getId() +
-//                ", transactions=" + transactions +
+                ", incomingTransactions=" + incomingTransactions.stream().map(Transaction::getId).toList() +
+                ", outgoingTransactions=" + outgoingTransactions.stream().map(Transaction::getId).toList() +
                 '}';
     }
 

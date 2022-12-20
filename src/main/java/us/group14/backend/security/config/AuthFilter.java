@@ -14,13 +14,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 import us.group14.backend.constants.ApiCookie;
 import us.group14.backend.constants.ApiResponse;
 import us.group14.backend.user.User;
 import us.group14.backend.user.UserDetailsService;
-import us.group14.backend.user.UserService;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -53,11 +51,24 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         final String jwtToken = authCookie.getValue();
-        final String username = jwtUtil.extractUsername(jwtToken);
 
         SecurityContext context = SecurityContextHolder.getContext();
-        if (username != null && context.getAuthentication() == null) {
+        if (context.getAuthentication() == null) {
+            if (jwtUtil.isTokenExpired(jwtToken)) {
+                userDetailsService.unauthenticate(request, response);
+
+                ResponseEntity<String> responseEntity = ApiResponse.USER_AUTH_EXPIRED.toResponse();
+
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().write(objectMapper.writeValueAsString(responseEntity));
+                return;
+            }
+
+            final String username = jwtUtil.extractUsername(jwtToken);
+            if (username == null) return;
             User user;
+
             try {
                 user = userDetailsService.loadUserByUsername(username);
             } catch (UsernameNotFoundException e) {

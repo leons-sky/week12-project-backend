@@ -14,6 +14,7 @@ public enum ApiResponse {
     CONFIRMATION_TOKEN_EXPIRED(HttpStatus.GONE, "Confirmation token has expired"),
     USER_TAKEN(HttpStatus.CONFLICT, "Username already taken"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not found"),
+    USER_AUTH_EXPIRED(HttpStatus.GONE, "Authorization token expired"),
     USER_AUTH_FAILED(HttpStatus.UNAUTHORIZED, "Invalid username or password"),
     USER_DISABLED(HttpStatus.CONFLICT, "User disabled"),
     USER_LOCKED(HttpStatus.FORBIDDEN, "User locked"),

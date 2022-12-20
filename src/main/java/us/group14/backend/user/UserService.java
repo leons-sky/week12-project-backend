@@ -38,6 +38,11 @@ public class UserService {
         return ResponseEntity.ok(userRepository.findAll());
     }
 
+    public ResponseEntity<User> getUser(User user) {
+        User loadedUser = userDetailsService.loadUserByUsername(user.getUsername());
+        return ResponseEntity.ok(loadedUser);
+    }
+
     public ResponseEntity<String> register(User user) {
         boolean userExists = userRepository.findByUsername(user.getUsername()).isPresent();
 

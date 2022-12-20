@@ -57,9 +57,13 @@ public class User implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = false;
 
-//    @OneToMany(fetch = FetchType.EAGER)
-//    @JsonView({AllUserInfoView.class})
-//    private Set<Contact> contacts;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonView({AllUserInfoView.class})
+    private Set<Contact> contacts;
+
+    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL)
+    @JsonView({AllUserInfoView.class})
+    private Set<Contact> contactsOf;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
@@ -148,7 +152,8 @@ public class User implements UserDetails {
                 ", password='" + password + '\'' +
                 ", locked=" + locked +
                 ", enabled=" + enabled +
-//                ", contacts=" + contacts.stream().map(Contact::getId).toList() +
+                ", contacts=" + contacts.stream().map(Contact::getId).toList() +
+                ", contactsOf=" + contactsOf.stream().map(Contact::getId).toList() +
                 ", account=" + account.getId() +
                 '}';
     }
