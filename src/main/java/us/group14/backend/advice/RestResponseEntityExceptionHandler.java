@@ -1,18 +1,18 @@
 package us.group14.backend.advice;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import org.springframework.boot.json.JsonParseException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,21 +20,35 @@ import java.util.Map;
 public class RestResponseEntityExceptionHandler
         extends ResponseEntityExceptionHandler {
 
+//    @Override
+//    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+//        System.out.println(ex.getClass());
+//        return super.handleExceptionInternal(ex, body, headers, statusCode, request);
+//    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("param", ex.getParameterName());
+        errors.put("type", ex.getParameterType());
+        ProblemDetail detail = ex.updateAndGetBody(null, );
+        errors.put("detail", Arrays.stream(ex.getDetailMessageArguments()).toList().toString());
+        return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Throwable cause = ex.getCause();
-        System.out.println(cause);
-        if (cause instanceof InvalidFormatException) {
-            InvalidFormatException fex = (InvalidFormatException) cause;
-
+        if (cause instanceof InvalidFormatException fex) {
             Map<String, String> errors = new HashMap<>();
             String fieldName = fex.getPath().get(0).getFieldName();
             Object fieldValue = fex.getValue();
             String errorMessage = String.format("Invalid value '%s' of type '%s' expected a valid '%s'", fieldValue, fieldValue.getClass().getSimpleName(), fex.getTargetType().getSimpleName());
             errors.put(fieldName, errorMessage);
             return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        } else {
+            return handleExceptionInternal(ex, cause.getMessage().lines().findFirst().orElse("Unknown error"), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
         }
-        return super.handleHttpMessageNotReadable(ex, headers, status, request);
     }
 
     @Override
