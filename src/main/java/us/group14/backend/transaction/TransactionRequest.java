@@ -1,9 +1,6 @@
 package us.group14.backend.transaction;
 
-import jakarta.validation.constraints.NotBlank;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,7 +15,7 @@ public class TransactionRequest {
     @PositiveOrZero
     private final Double amount;
 
-    @Length(max = 255)
+    @Length(max = 150)
     private final String message;
 
     private final String recipient;

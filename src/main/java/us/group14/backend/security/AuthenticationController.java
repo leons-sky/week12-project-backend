@@ -3,6 +3,7 @@ package us.group14.backend.security;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> authenticate(HttpServletResponse response, @RequestBody AuthenticationRequest request) {
+    public ResponseEntity<String> authenticate(HttpServletResponse response, @Valid @RequestBody AuthenticationRequest request) {
         return userService.authenticate(response, request);
     }
 
