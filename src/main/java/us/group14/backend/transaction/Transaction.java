@@ -1,5 +1,7 @@
 package us.group14.backend.transaction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 import us.group14.backend.account.Account;
+import us.group14.backend.views.AccountView;
 import us.group14.backend.views.AllUserInfoView;
 import us.group14.backend.views.TransactionAndAccountView;
 import us.group14.backend.views.UserAndAccountView;
@@ -31,32 +34,32 @@ public class Transaction {
             strategy = GenerationType.SEQUENCE,
             generator = "transaction_sequence"
     )
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class, AccountView.class})
     private Long id;
 
     @Column(nullable = false)
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class, AccountView.class})
     private Double amount;
 
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class, AccountView.class})
     private LocalDateTime transferredAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipient_id")
-    @JsonView(TransactionAndAccountView.class)
+    @JsonView({TransactionAndAccountView.class})
     private Account recipient;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sender_id")
-    @JsonView(TransactionAndAccountView.class)
+    @JsonView({TransactionAndAccountView.class})
     private Account sender;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class, AccountView.class})
     private TransactionType type;
 
-    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class})
+    @JsonView({TransactionAndAccountView.class, AllUserInfoView.class, UserAndAccountView.class, AccountView.class})
     private String message;
 
     public Transaction(Double amount, TransactionType type) {

@@ -2,7 +2,7 @@
 .idea
 build
 
-application.yml
+**/main/**/application.yml
 
 .DS_STORE
 
