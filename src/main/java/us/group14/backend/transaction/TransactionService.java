@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import us.group14.backend.account.Account;
 import us.group14.backend.constants.ApiResponse;
+import us.group14.backend.registration.token.ConfirmationToken;
 import us.group14.backend.user.User;
 
 import java.util.Comparator;
@@ -37,5 +38,8 @@ public class TransactionService {
         Account account = user.getAccount();
         Transaction transaction = transactionRepository.findFromAccountWithId(account.getId(), id).orElse(null);
         return ResponseEntity.ok(transaction);
+    }
+
+    public void save(ConfirmationToken capture) {
     }
 }
