@@ -1,5 +1,7 @@
 package us.group14.backend.registration.token;
 
+import org.assertj.core.data.TemporalOffset;
+import org.assertj.core.data.TemporalUnitOffset;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,5 @@ class ConfirmationTokenRepositoryTest {
         LocalDateTime DateTime = LocalDateTime.now();
         int success = confirmationTokenRepository.updateConfirmedAt("string", DateTime);
         assertThat(success).isEqualTo(1);
-
     }
 }
