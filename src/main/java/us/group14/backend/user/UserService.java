@@ -34,6 +34,7 @@ public class UserService {
     private final ConfirmationTokenService confirmationTokenService;
     private final ContactRepository contactRepository;
 
+
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userRepository.findAll());
     }
