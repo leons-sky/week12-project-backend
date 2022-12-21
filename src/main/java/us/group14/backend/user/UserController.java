@@ -1,6 +1,8 @@
 package us.group14.backend.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/contacts/{username}")
-    public ResponseEntity<String> addContact(AuthUser authUser, @PathVariable("username") String username) {
+    public ResponseEntity<String> addContact(AuthUser authUser, @Valid @PathVariable("username") @NotBlank String username) {
         return userService.addContact(authUser.get(), username);
     }
 
@@ -46,10 +48,7 @@ public class UserController {
     }
 
     @DeleteMapping("/contacts/{username}")
-    public ResponseEntity<String> deleteContact(AuthUser authUser, @PathVariable("username") String username) {
+    public ResponseEntity<String> deleteContact(AuthUser authUser, @Valid @PathVariable("username") @NotBlank String username) {
         return userService.deleteContact(authUser.get(), username);
     }
-
-
-
 }

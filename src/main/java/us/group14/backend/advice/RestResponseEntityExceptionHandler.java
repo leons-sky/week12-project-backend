@@ -2,6 +2,7 @@ package us.group14.backend.advice;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -31,8 +32,8 @@ public class RestResponseEntityExceptionHandler
         Map<String, String> errors = new HashMap<>();
         errors.put("param", ex.getParameterName());
         errors.put("type", ex.getParameterType());
-        ProblemDetail detail = ex.updateAndGetBody(null, );
-        errors.put("detail", Arrays.stream(ex.getDetailMessageArguments()).toList().toString());
+        ProblemDetail detail = ex.updateAndGetBody(null, LocaleContextHolder.getLocale());
+        errors.put("detail", detail.getDetail());
         return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
