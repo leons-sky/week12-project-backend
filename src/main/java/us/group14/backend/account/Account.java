@@ -52,11 +52,11 @@ public class Account {
     }
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL)
-    @JsonView({AllUserInfoView.class, UserAndAccountView.class})
+    @JsonView({AllUserInfoView.class, UserAndAccountView.class, AccountView.class})
     private Set<Transaction> incomingTransactions;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    @JsonView({AllUserInfoView.class, UserAndAccountView.class})
+    @JsonView({AllUserInfoView.class, UserAndAccountView.class, AccountView.class})
     private Set<Transaction> outgoingTransactions;
 
     public Account() {
