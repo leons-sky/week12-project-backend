@@ -23,6 +23,7 @@ public class RestResponseEntityExceptionHandler
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Throwable cause = ex.getCause();
+        System.out.println(cause);
         if (cause instanceof InvalidFormatException) {
             InvalidFormatException fex = (InvalidFormatException) cause;
 
