@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
-@ImportResource({"classpath*:application-context.xml"})
 public class PayApplication {
 
 	public static void main(String[] args) {
