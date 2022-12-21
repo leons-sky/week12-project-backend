@@ -28,14 +28,12 @@ public class AccountService {
     }
 
     public ResponseEntity<Double> getBalance(User user) {
-        //Hibernate.initialize(user);
         Account account = user.getAccount();
         return ResponseEntity.ok(account.getBalance());
     }
 
 //    @Transactional
     public ResponseEntity<String> withdraw(User user, TransactionRequest request) {
-        //Hibernate.initialize(user);
         Account account = user.getAccount();
         Double amount = request.getAmount();
         if (amount == null) {
@@ -59,7 +57,6 @@ public class AccountService {
 
 //    @Transactional
     public ResponseEntity<String> deposit(User user, TransactionRequest request) {
-        //Hibernate.initialize(user);
         Account account = user.getAccount();
         Double amount = request.getAmount();
         if (amount == null) {
@@ -82,8 +79,7 @@ public class AccountService {
 
 //    @Transactional
     public ResponseEntity<String> transfer(User user, TransactionRequest request) {
-        //Hibernate.initialize(user);
-        User recipient = userDetailsService.getUserById(request.getRecipientId());
+        User recipient = userDetailsService.loadUserByUsername(request.getRecipient());
         if (recipient == null) {
             return ApiResponse.USER_NOT_FOUND.toResponse();
         }
