@@ -38,41 +38,41 @@ class AccountControllerTest {
 //        return accountService.getAccount(user);
 //    }
 
-    @Test
-    void getAccount() throws Exception {
-
-    }
-
-    @Test
-    void getBalance() throws Exception {
-        User user = new User("user1", "user1@mail.com", "password", UserRole.USER);
-        Account account = new Account();
-
-        when(authUser.get()).thenReturn(user);
-        when(accountService.getBalance(any())).thenReturn(ResponseEntity.ok(account.getBalance()));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/account/balance"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json("0.0"));
-    }
-
-    @Test
-    void withdraw() {
-    }
-
-    @Test
-    void deposit() {
-    }
-
-    @Test
-    void transfer() {
-    }
-
-    @Test
-    void getTransactions() {
-    }
-
-    @Test
-    void getTransaction() {
-    }
+//    @Test
+//    void getAccount() throws Exception {
+//
+//    }
+//
+//    @Test
+//    void getBalance() throws Exception {
+//        User user = new User("user1", "user1@mail.com", "password", UserRole.USER);
+//        Account account = new Account();
+//
+//        when(authUser.get()).thenReturn(user);
+//        when(accountService.getBalance(any())).thenReturn(ResponseEntity.ok(account.getBalance()));
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/account/balance"))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.content().json("0.0"));
+//    }
+//
+//    @Test
+//    void withdraw() {
+//    }
+//
+//    @Test
+//    void deposit() {
+//    }
+//
+//    @Test
+//    void transfer() {
+//    }
+//
+//    @Test
+//    void getTransactions() {
+//    }
+//
+//    @Test
+//    void getTransaction() {
+//    }
 }

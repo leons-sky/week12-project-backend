@@ -28,10 +28,10 @@ class UserControllerTest {
 ////        this.restTemplate = restTemplate;
 //    }
 
-    @Test
-    void contextLoads(ApplicationContext context) {
-        assertThat(context).isNotNull();
-    }
+//    @Test
+//    void contextLoads(ApplicationContext context) {
+//        assertThat(context).isNotNull();
+//    }
 
 //    @AfterEach
 //    void tearDown() {
